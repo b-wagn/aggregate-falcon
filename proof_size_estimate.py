@@ -25,30 +25,30 @@ from enum import Enum
 	kappa_lim[kappa] = largest beta for which that kappa gives us SECPARAM-bit MSIS security (using SIS_hardness.py script)
 '''
 
-# all configurations we need        
-class FALCON_64_128(): 
+# all configurations we need
+class FALCON_64_128():
     def __init__(self) -> None:
         self.d = 64
         self.q = 12289
         self.beta = 5834
-        self.bit_len = 5328-320 
+        self.bit_len = 5328-320
         self.SECPARAM = 128
         self.JL_const = 120
         self.JL_slack = math.sqrt(128/30)
         self.kappa_lim = [-1, 271, 2687, 16383, 73727, 524287, 917503, 2621439, 7340031, 18874367, 50331647, 117440511, 251658239, 1073741823, 1207959551, 2684354559, 5368709119, 10737418239, 21474836479, 68719476735, 137438953471, 137438953471, 240518168575, 549755813887, 755914244095, 1374389534719, 4398046511103, 4398046511103, 8796093022207, 13194139533311, 35184372088831, 35184372088831, 52776558133247, 87960930222079, 140737488355326, 140737488355326]
-      
-class FALCON_128_128(): 
+
+class FALCON_128_128():
     def __init__(self) -> None:
         self.d = 128
         self.q = 12289
         self.beta = 5834
-        self.bit_len = 5328-320 
+        self.bit_len = 5328-320
         self.SECPARAM = 128
         self.JL_const = 120
         self.JL_slack = math.sqrt(128/30)
         self.kappa_lim = [-1, 2687, 73727, 917503, 7340031, 50331647, 251658239, 1207959551, 5368709119, 21474836479, 137438953471, 240518168575, 755914244095, 4398046511103, 8796093022207, 35184372088831, 52776558133247, 140737488355326, 140737488355326]
 
-class FALCON_128_256(): 
+class FALCON_128_256():
     def __init__(self) -> None:
         self.d = 128
         self.q = 12289
@@ -58,8 +58,8 @@ class FALCON_128_256():
         self.JL_const = 168
         self.JL_slack = math.sqrt(128/30)
         self.kappa_lim = [-1, 463, 5887, 49151, 229375, 917503, 3407871, 11534335, 34603007, 100663295, 268435455, 805306367, 1744830463, 4294967295, 9663676415, 21474836479, 47244640255, 103079215103, 206158430207, 549755813887, 1099511627775, 1649267441663, 3161095929855, 6047313952767, 13194139533311, 21990232555519, 39582418599935, 70368744177663, 140737488355326, 140737488355326]
-   
-class FALCON_256_256(): 
+
+class FALCON_256_256():
     def __init__(self) -> None:
         self.d = 256
         self.q = 12289
@@ -76,7 +76,7 @@ class FALCON_256_256():
 ''' Defining challenge sets for FALCON_DEG_SEC in the case of
     1) two-splitting rings  (2_SPLIT)
     2) almost fully-splitting rings (ALMOST_FULL_SPLIT)
-    
+
     (Parameters depend on ring degree DEG and security level SEC, thus different classes for the relevant combinations)
 
     rho 	= number of CRT slots (ell in the paper)
@@ -84,7 +84,7 @@ class FALCON_256_256():
     T 		= bound on operator norm (given by the weight, T_op in the paper)
     rep 	= boolian to indicate whether parallel repetition is necessary
 
-    Parameters are set such that 
+    Parameters are set such that
 
     i) size of challenge set > 2^SECPARAM
     ii) probability of non-invertibility < 2^(-SEPARAM)
@@ -92,14 +92,14 @@ class FALCON_256_256():
     using the SageMath program 'compute_weight.sage' in this repository
 '''
 
-# best subring -> best parameter sets        
+# best subring -> best parameter sets
 class CHAL_2_SPLIT_64_128():
     def __init__(self) -> None:
         self.rho = 2
         self.tau = math.ceil(172/2) #omega * gam^2 = 43*(2**2)=172
         self.T = math.ceil(86/2) #omega * gam = 43*2 =86
         self.rep = False
-        
+
 class CHAL_2_SPLIT_128_256():
     def __init__(self) -> None:
         self.rho = 2
@@ -107,7 +107,7 @@ class CHAL_2_SPLIT_128_256():
         self.T = math.ceil(148/2.5) #omega * gam = 74*2=148
         self.rep = False
 
-# best subring -> best parameter sets                
+# best subring -> best parameter sets
 class CHAL_ALMOST_FULL_SPLIT_128_128():
     def __init__(self) -> None:
         self.rho = 128//4
@@ -120,7 +120,7 @@ class CHAL_ALMOST_FULL_SPLIT_256_256():
         self.rho = 256//8
         self.tau = math.ceil(1296/2.5) #144*(3**2)=1296
         self.T = math.ceil(432/2.5) #144*3=432
-        self.rep = False   
+        self.rep = False
 
 #beta_fun is a lambda that takes kappa as input and outputs a norm. Needed for Thm 5.1.
 def get_kappa(beta_fun, q_,kappa_lim):
@@ -129,7 +129,7 @@ def get_kappa(beta_fun, q_,kappa_lim):
     for i in range(1, len(kappa_lim)):
         beta = beta_fun(i)
         if beta <= kappa_lim[i]:
-            kappa = i 
+            kappa = i
             break
 
     if beta >= q_:
@@ -152,7 +152,7 @@ def format_size(nbits):
         return "{v:10.2f} kB".format(v=nkb)
     if nmb < 1000:
         return "{v:10.2f} MB".format(v=nmb)
-    return "{v:10.2f} GB".format(v=ngb) 
+    return "{v:10.2f} GB".format(v=ngb)
 
 #### LaBRADOR script utils ####
 
@@ -188,23 +188,23 @@ def get_initial_params(num_sigs, falcon, chal, scal, verbose=False):
     beta_quotient_ell2 = math.sqrt(num_sigs) * (falcon.beta* falcon.d + math.sqrt(falcon.d) + 1) # called beta_2^(2) in paper
     ## sum of both l2-norm bounds gives final l2-norm bound
     beta_labrador = beta_sig_ell2 + beta_quotient_ell2
-    
+
     # Condition 1
     # for beta_2^(1)
     bound_cond_1_sig = math.sqrt(falcon.SECPARAM) * beta_sig_ell2 * falcon.JL_const
     # for beta_2^(2)
     bound_cond_1_quo = math.sqrt(falcon.SECPARAM) * beta_quotient_ell2 * falcon.JL_const
-        
+
     # Condition 2
     # for beta_inf^(1)
     bound_cond_2_sig = (falcon.JL_slack)**2 * (beta_sig_ell2)**2 * 4 * (falcon.d + 2)
     # for beta_inf^(2)
     bound_cond_2_quo = falcon.JL_slack * beta_quotient_ell2 * 6 * falcon.q
-    
-    
+
+
     q_bitlen = math.ceil( max(math.log2(bound_cond_1_sig), math.log2(bound_cond_1_quo), math.log2(bound_cond_2_sig), math.log2(bound_cond_2_quo)))
-    
-    '''    
+
+    '''
     if verbose:
         print(num_sigs)
         print("beta_2^1: ", beta_sig_ell2, "beta_2^2: ", beta_quotient_ell2)
@@ -213,12 +213,12 @@ def get_initial_params(num_sigs, falcon, chal, scal, verbose=False):
         print("bound through condition 2 for signature: ", bound_cond_2_sig)
         print("bound through condition 2 for quotient: ", bound_cond_2_quo)
         print("bit length of Labrador modulus: ", q_bitlen)
-    '''    
+    '''
     if falcon.SECPARAM > q_bitlen * (falcon.d / chal.rho):
     	print("ERROR: q^{d/l} not big enough")
-        
+
     q_ = 2**q_bitlen-1
-    
+
     ## Starting Constraints
     n = scal * num_sigs
     r = 6 * math.ceil(math.sqrt(num_sigs)) + 1
@@ -227,7 +227,7 @@ def get_initial_params(num_sigs, falcon, chal, scal, verbose=False):
 ###############################
 class Stage(Enum):
     FIRST = 1
-    MID = 2 
+    MID = 2
     SECLAST = 3
     LAST = 4 #Meant for last round optimization, not used any more.
 
@@ -236,7 +236,7 @@ class Iteration():
         self.q_ = q_
         self.d = d
         self.slack = slack
-        self.n = n 
+        self.n = n
         self.r_list = r_list
         self.beta_list = beta_list
         self.chal = chal
@@ -245,7 +245,7 @@ class Iteration():
         self.prevmu = prevmu
         self.secparam = secparam
         self.kappa_lim = kappa_lim
-    
+
         #Initializing internal variables
         if stage == Stage.LAST:
              self.init_last()
@@ -259,10 +259,10 @@ class Iteration():
 
         #sig=sigma, the usual symbol for standard derivation.
         #They assume s_i are Gaussian with this standard deviation (p.16).
-        self.sigs = [self.beta_list[i]/math.sqrt(self.r_list[i]*self.n*self.d) for i in range(0, len(self.r_list))] 
+        self.sigs = [self.beta_list[i]/math.sqrt(self.r_list[i]*self.n*self.d) for i in range(0, len(self.r_list))]
 
         #In the paper they model z as having SD sigs*sqrt(r*tau).
-        #This seems to be the new SD of z_0 and z_1, when they keep track of the norm and SD of the 
+        #This seems to be the new SD of z_0 and z_1, when they keep track of the norm and SD of the
         #subcomponents of the witness separately.
         self.sigz = math.sqrt(self.sigs[0]**2*(1.0+(self.r_list[0]-1)*self.chal.tau) + sum([self.sigs[i]**2*self.r_list[i]*self.chal.tau for i in range(1, len(self.r_list))]))
 
@@ -276,7 +276,7 @@ class Iteration():
             self.t,self.b = 2,round(math.sqrt(math.sqrt(12.0)*self.sigz))
 
         #t_i and h_ij are split into t1 parts wrt the basis b1.
-        #t1 is different compared to the paper. I assume the max is to make sure 
+        #t1 is different compared to the paper. I assume the max is to make sure
         #we don't get weird dividing by log(1) issues.
         self.t1 = round(self.logq/math.log2(math.sqrt(12.0)*self.sigz/self.b))
         self.t1 = max(2,self.t1)
@@ -295,7 +295,7 @@ class Iteration():
         #gamma = sigz *sqrt(nd), because the norm contribution of each Zq coefficient is on average the SD,
         #and there are nd coeffcients.
         self.nextbeta_list = [self.sigz/self.b*math.sqrt(float(self.t)*self.n*self.d), 0]
-        
+
         #Rank of inner commitments
         newbeta1_fun = lambda kappa: math.sqrt(self.b1**2/12*self.t1*sumr*kappa*self.d + (self.b1**2*self.t1+self.b2**2*self.t2)/12*(sumr**2+sumr)/2*self.d)
         newbeta_fun = lambda kappa: math.sqrt(self.nextbeta_list[0]**2 + newbeta1_fun(kappa)**2)
@@ -303,7 +303,7 @@ class Iteration():
         self.kappa = get_kappa(kappa_norm, self.q_,self.kappa_lim)
         self.nextbeta_list[1] = newbeta1_fun(self.kappa)
 
-        #The rank of the outer commitments. 
+        #The rank of the outer commitments.
         kappa1_norm = lambda kappa: 2*self.slack*newbeta_fun(kappa)
         self.kappa1 = get_kappa(kappa1_norm, self.q_,self.kappa_lim)
 
@@ -327,7 +327,7 @@ class Iteration():
         #We also don't need to multiply with the slack since we are not going to recurse further.
         kappa_norm = lambda kappa: max(6*self.chal.T*self.beta,2*self.beta+4*self.chal.T*self.beta)
         self.kappa = get_kappa(kappa_norm, self.q_,self.kappa_lim)
-        
+
         #For printing purposes
         self.kappa1 = 0
         self.m = 0
@@ -342,28 +342,28 @@ class Iteration():
         outer_com = numouter * self.kappa1 * self.d * self.logq
 
         return jl_proj + jl_proof + outer_com
-    
+
 
     def size_ti(self):
         return sum(self.r_list)*self.kappa*self.d*self.logq
-    
+
     def size_gij(self):
         if self.stage == Stage.LAST:
             #According to Section 5.6, there will be 2*nu+1 g_ij polynomials
             return (1+2*self.r_list[0])*self.d*gaussianentropy(self.sigh) # quadratic garbage polys, assumes t = 1
-        
+
         return ((self.r_list[0]**2 + self.r_list[0])/2)*self.d*gaussianentropy(self.sigh)
 
     def size_hij(self):
         if self.stage == Stage.LAST:
             #According to Section 5.6, there will be 2r-1 h_ij polynomials.
             return (2*sum(self.r_list)-1)*self.d*self.logq  # linear garbage polys
-        
+
         return ((self.r_list[0]**2 + self.r_list[0])/2)*self.d*self.logq
-    
+
     def size_lastmsg(self):
         return self.size_ti() + self.size_gij() + self.size_hij() + self.size_z()
-    
+
     def size_all(self):
         return self.size_step() + self.size_lastmsg()
 
@@ -372,10 +372,10 @@ class Iteration():
             return 1
         for k in range(1,20):
             if self.secparam < math.log2( k / self.d) + k * math.log2(self.q_): # <=> 2^(-secparam) > d/k * (1/q)^k
-                return k     
+                return k
         # TODO this is super hacky, but we should never end in this case
         return 21
-        
+
     def size_z(self):
         if self.stage == Stage.LAST:
             #TODO: times two to avoid exponential loss in weak opening norms (ask sebastian)
@@ -432,7 +432,7 @@ def recursion_strategy_final_4(it, nextstage):
 def recursion_to_depth(initial_it, depth):
     iters = [initial_it]
     it = initial_it
-    strategies = [] if depth <= 3 else [recursion_strategy_4] * (depth-3) 
+    strategies = [] if depth <= 3 else [recursion_strategy_4] * (depth-3)
     for strat in strategies:
         it = it.next_it(strat, Stage.MID)
         iters.append(it)
@@ -445,7 +445,7 @@ def recursion_to_depth(initial_it, depth):
     total = 0
     for it in iters:
         total += it.size_step()
-    
+
     total += iters[len(iters)-1].size_lastmsg()
 
     return iters, total
@@ -453,7 +453,7 @@ def recursion_to_depth(initial_it, depth):
 def recursion_to_depth_no_last_opt(initial_it, depth):
     iters = [initial_it]
     it = initial_it
-    strategies = [] if depth <= 2 else [recursion_strategy_4] * (depth-2) 
+    strategies = [] if depth <= 2 else [recursion_strategy_4] * (depth-2)
     for strat in strategies:
         it = it.next_it(strat, Stage.MID)
         iters.append(it)
@@ -464,7 +464,7 @@ def recursion_to_depth_no_last_opt(initial_it, depth):
     total = 0
     for it in iters:
         total += it.size_step()
-    
+
     total += iters[len(iters)-1].size_lastmsg()
 
     return iters, total
@@ -495,11 +495,11 @@ def search(num_sigs, max_depth, falcon, chal, scal, verbose=False):
     return best_size
 
 ## FUNCTIONS TO COMPUTE NUMBERS AND STORE IN CSV FILES
-    
+
 def compute_sizes_best(file_name, sizes):
     f = open(file_name,"a")
     max_depth = 15
-  
+
     f.write("Num-Sigs,Naive-512,Naive-1024,Falcon-512-2S,Falcon-512-AS,Falcon-1024-2S,Falcon-1024-AS\n")
     for num_sigs in sizes:
         sys.stdout.write('\r')
@@ -511,32 +511,33 @@ def compute_sizes_best(file_name, sizes):
 	# Falcon-1024 2S (two-splitting), AS (almost-fully-splitting)
         f1024_2S = search(num_sigs, max_depth, FALCON_128_256(), CHAL_2_SPLIT_128_256(),8)
         f1024_AS = search(num_sigs, max_depth, FALCON_256_256(), CHAL_ALMOST_FULL_SPLIT_256_256(),4)
-        # Also include naive concatenative 
+        # Also include naive concatenative
         f.write(f'{num_sigs}, {num_sigs * FALCON_128_128().bit_len}, {num_sigs * FALCON_256_256().bit_len}, {f512_2S}, {f512_AS}, {f1024_2S},{f1024_AS} \n')
         f.flush()
     f.close()
     print("Done!")
 
-## NEW WITH BEST SUBRING 
-# COMPARISON WITH [JRS23]
+if False:
+    ## NEW WITH BEST SUBRING
+    # COMPARISON WITH [JRS23]
 
-print("\n RESULTS FOR COMPARISON WITH [JRS23] (Table 4 in the submission)")
-print("\n For Falcon-512 (degree 64, secpar 121) and N=500")
-search(500, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
-print("\n For Falcon-512 (degree 64, secpar 121) and N=1000")
-search(1000, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
-print("\n For Falcon-512 (degree 64, secpar 121) and N=2000")
-search(2000, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
+    print("\n RESULTS FOR COMPARISON WITH [JRS23] (Table 4 in the submission)")
+    print("\n For Falcon-512 (degree 64, secpar 121) and N=500")
+    search(500, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
+    print("\n For Falcon-512 (degree 64, secpar 121) and N=1000")
+    search(1000, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
+    print("\n For Falcon-512 (degree 64, secpar 121) and N=2000")
+    search(2000, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
 
-# COMPARISON WITH SQUIRREL AND CHIPMUNK
+    # COMPARISON WITH SQUIRREL AND CHIPMUNK
 
-print("\n RESULTS FOR COMPARISON WITH SQUIRREL & CHIPMUNK (Table 5 in the submission)")
-print("\n For Falcon-512 (degree 64, secpar 121) and N=1024")
-search(1024, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
-print("\n For Falcon-512 (degree 64, secpar 121) and N=4096")
-search(4096, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
-print("\n For Falcon-512 (degree 64, secpar 121) and N=8192")
-search(8192, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
+    print("\n RESULTS FOR COMPARISON WITH SQUIRREL & CHIPMUNK (Table 5 in the submission)")
+    print("\n For Falcon-512 (degree 64, secpar 121) and N=1024")
+    search(1024, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
+    print("\n For Falcon-512 (degree 64, secpar 121) and N=4096")
+    search(4096, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
+    print("\n For Falcon-512 (degree 64, secpar 121) and N=8192")
+    search(8192, 15, FALCON_64_128(), CHAL_2_SPLIT_64_128(),8, True)
 
-# Computes all relevant aggregate signature sizes to run plot.py to obtain the different figures in Section 6.2
-compute_sizes_best("estimates-lin-.csv",  range(100, 10101, 100)) # start, end, step size
+    # Computes all relevant aggregate signature sizes to run plot.py to obtain the different figures in Section 6.2
+    compute_sizes_best("estimates-lin-.csv",  range(100, 10101, 100)) # start, end, step size
