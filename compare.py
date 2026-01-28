@@ -36,8 +36,7 @@ parser.add_argument(
 args = parser.parse_args()
 N = args.num_transactions
 
-# Aggregated signature size function
-# You can modify this to match your aggregation scheme
+
 def aggregated_signature_size(N):
     """
     Aggregated signature size a_N.
