@@ -163,7 +163,7 @@ if args.plot:
         plt.axvline(x=intersection_x, color='gray', linestyle='--', linewidth=1.5, alpha=0.7)
 
     plt.xlabel('Number of Signatures (N)', fontsize=12)
-    plt.ylabel('Size (KB)', fontsize=12)
+    plt.ylabel('Size (KiB)', fontsize=12)
     plt.title('Size Comparison for Falcon Signatures', fontsize=14)
     plt.legend(loc='upper left', fontsize=10)
     plt.grid(True, alpha=0.3)
