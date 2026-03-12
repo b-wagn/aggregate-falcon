@@ -17,7 +17,7 @@ r = 40         # nonce size
 
 # Key / address sizes
 p = 897        # public key size
-h = 160/8      # address size (hash of public key)
+h = 160/8      # address size (hash of public key) - not stored in Case 1, recovered from signature
 
 # Number of transactions
 parser = argparse.ArgumentParser(description="Storage cost estimation")
@@ -46,17 +46,14 @@ def aggregated_signature_size(N):
     proof_size_bits = proof_size_estimate.search(N, 15, proof_size_estimate.FALCON_64_128(), proof_size_estimate.CHAL_2_SPLIT_64_128(),8, False)
     return proof_size_bits / 8
 
-
-
-
-
-
 # =========================
 # Size Calculations
 # =========================
 
 # Case 1: With Key Recovery, No Aggregation
-case1_total = N * (h + s_tilde + r)
+# The sender address is not stored: it is recovered from the signature during verification,
+# analogously to how Ethereum currently recovers the sender from an ECDSA signature.
+case1_total = N * (s_tilde + r)
 
 # Case 2: Without Key Recovery, No Aggregation
 case2_total = N * (p + s + r)
@@ -65,7 +62,6 @@ case2_total = N * (p + s + r)
 # Note: a_N already counts the salts
 a_N = aggregated_signature_size(N)
 case3_total = N * p + a_N + N * r
-
 
 
 # =========================
@@ -117,7 +113,8 @@ if args.plot:
             c3 = n * p + a_n + n * r
 
             # Case 1: With Key Recovery, No Aggregation
-            c1 = n * (h + s_tilde + r)
+            # Address not stored — recovered from signature during verification
+            c1 = n * (s_tilde + r)
 
             # Case 2: Without Key Recovery, No Aggregation
             c2 = n * (p + s + r)
