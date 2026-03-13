@@ -129,7 +129,7 @@ if args.plot:
         except Exception as e:
             print(f"  Skipping N={n}: {e}")
 
-    # Convert to KB 
+    # Convert to KB
     case1_kb = np.array(case1_values) / 1024
     case2_kb = np.array(case2_values) / 1024
     case3_kb = np.array(case3_values) / 1024
@@ -152,9 +152,15 @@ if args.plot:
     colors = ['#2E86AB', '#A23B72', '#F18F01']  # Blue, Magenta, Orange
 
     plt.figure(figsize=(10, 6))
-    plt.plot(valid_N_values, case1_kb, label='Case 1: Key Recovery, No Aggregation', linewidth=2, color=colors[0])
-    plt.plot(valid_N_values, case2_kb, label='Case 2: No Key Recovery, No Aggregation', linewidth=2, color=colors[1])
-    plt.plot(valid_N_values, case3_kb, label='Case 3: No Key Recovery, With Aggregation', linewidth=2, color=colors[2])
+    plt.plot(valid_N_values, case1_kb, label='Case 1: Key Recovery, No Aggregation', linewidth=2, color=colors[0], marker='o',        # circle
+    markersize=6,
+    markevery=1)
+    plt.plot(valid_N_values, case2_kb, label='Case 2: No Key Recovery, No Aggregation', linewidth=2, color=colors[1], marker='^',        # circle
+    markersize=6,
+    markevery=1)
+    plt.plot(valid_N_values, case3_kb, label='Case 3: No Key Recovery, With Aggregation', linewidth=2, color=colors[2], marker='s',        # circle
+    markersize=6,
+    markevery=1)
 
     if intersection_x is not None:
         plt.axvline(x=intersection_x, color='gray', linestyle='--', linewidth=1.5, alpha=0.7)
